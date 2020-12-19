@@ -1,0 +1,43 @@
+.downloadBtnContainer {
+    background-color: transparent;
+    font-weight: bold;
+    font: 14px Roboto, Arial, sans-serif;
+    color: #aaaaaa;
+    text-transform: uppercase;
+    padding: 0px 7px 0px 5px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    max-width: 120px;
+}
+
+.downloadBtnContainer p {
+    position: relative;
+    left: 18px;
+    top: -23px;
+}
+
+#downloadIcon {
+    position: relative;
+    left: 0px;
+    top: 3px;
+    font: 25px Roboto, Arial, sans-serif;
+}
+
+#hideContent {
+    z-index: 1000;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+#infoText {
+    position: relative;
+    top: 300px;
+    font-size: 400%;
+    font-weight: bold;
+    font-family: "Agency FB", sans-serif;
+}
