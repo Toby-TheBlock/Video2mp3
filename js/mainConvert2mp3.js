@@ -1,8 +1,16 @@
-/* © Copyright 2020, Tobias Günther, All rights reserved. */
+/* © Copyright 2021, Tobias Günther, All rights reserved. */
 
+/**
+ * Ready the DOM and setup intervals/variables on the download-page.
+ */
 if (window.location.href.includes("https://ytmp3.cc/")) {
     setupDownloadPage();
-    downloadVideo();
+    listenToBackground();
+
+    var interval = setInterval(readyDownload, 1);
+    setInterval(downloadVideo, 1);
+
+    var videoURL;
 }
 
 
@@ -10,8 +18,6 @@ if (window.location.href.includes("https://ytmp3.cc/")) {
  * Hides the actual content of the host website.
  */
 function setupDownloadPage() {
-    document.getElementsByTagName("title")[0].innerHTML = "Downloading...";
-
     let container = document.createElement("div");
     container.id = "hideContent";
 
@@ -21,23 +27,43 @@ function setupDownloadPage() {
 
     container.appendChild(paragraph);
     document.body.appendChild(container);
+    document.getElementsByTagName("title")[0].innerHTML = "Downloading...";
 }
 
 
 /**
- * Listens for a message from the backend containing the video-url to download.
- * Once the url is received start the conversion and download of the mp3.
+ * Adds message listener which awaits the videoURL who's to be downloaded from the background.
+ */
+function listenToBackground() {
+    chrome.runtime.onMessage.addListener(function(request) {
+        videoURL = request.URLToInsert;
+    });
+}
+
+
+/**
+ * Provides the videoURL to the host website, and initializes the video conversion.
+ */
+function readyDownload() {
+    if (videoURL !== "") {
+        setTimeout(function() {
+            document.getElementById("input").value = videoURL;
+            document.getElementById("submit").click();
+        }, 1000);
+
+        clearInterval(interval);
+    }
+}
+
+
+/**
+ * Starts the download of the converted video and sends message to background finish up.
  */
 function downloadVideo() {
-    chrome.runtime.onMessage.addListener(function(request) {
-        document.getElementById("input").value = request.URLToInsert;
-        document.getElementById("submit").click();
-
+    if (document.getElementById("buttons").hasAttribute("style")) {
+        document.getElementsByTagName("a")[5].click();
         setTimeout(function() {
-            document.getElementsByTagName("a")[5].click();
-            setTimeout(function() {
-                chrome.runtime.sendMessage({closeTab: "."});
-            }, 1000);
-        }, 1000);
-    });
+            chrome.runtime.sendMessage({closeTab: "."});
+        }, 2000);
+    }
 }

@@ -8,22 +8,25 @@
   "browser_action": {
 		"default_title": "Video2mp3"
   },
-  
+
   "permissions": [
     	"activeTab", "*://*/*",
     	"tabs", "*://*/*",
         "downloads"
   ],
+
   "background": {
   		"scripts": ["js/background.js"]
   },
+
   "content_scripts": [
         {
         "matches": ["https://ytmp3.cc/*", "https://www.youtube.com/*"],
-          "css": ["css/main.css"],
+        "css": ["css/main.css"],
         "js": ["js/mainConvert2mp3.js", "js/mainYouTube.js"]
         }
     ],
+
   "web_accessible_resources": [
     "js/*.js"
   ]

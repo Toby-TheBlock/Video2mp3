@@ -1,18 +1,22 @@
-/* © Copyright 2020, Tobias Günther, All rights reserved. */
+/* © Copyright 2021, Tobias Günther, All rights reserved. */
 
 window.setInterval(setupDownloadBtn, 100);
+var failedAttempts = 0;
 
 
 /**
- * Tries to setup the download button in the DOM,
- * if the current page is a video and the button doesn't already exist.
+ * Tries to setup the download button in the DOM if the current page is a video and the button doesn't already exist.
+ * The setup will be retried if the previous attempt failed.
  */
 function setupDownloadBtn() {
     if (window.location.href.includes("https://www.youtube.com/watch") && document.getElementById("downloadBtnContainer") === null) {
         try {
             createDownloadBtn();
         } catch {
-            // nothing to be caught.
+            if (failedAttempts < 100) {
+                failedAttempts++;
+                setupDownloadBtn();
+            }
         }
     }
 }
