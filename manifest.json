@@ -3,7 +3,7 @@
 
   "name": "Video2mp3",
   "description": "Converts and downloads a provided video URL to a mp3-file.",
-  "version": "1.0",
+  "version": "1.2",
 
   "browser_action": {
 		"default_title": "Video2mp3"
