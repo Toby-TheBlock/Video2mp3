@@ -37,6 +37,7 @@
 #infoText {
     position: relative;
     top: 300px;
+    text-align: center;
     font-size: 400%;
     font-weight: bold;
     font-family: "Agency FB", sans-serif;

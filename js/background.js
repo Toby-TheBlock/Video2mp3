@@ -10,9 +10,13 @@ var returnTab = "";
  * and stores it in the activeTabURL variable.
  */
 chrome.tabs.onActivated.addListener(function() {
-    chrome.tabs.getSelected(null, function(activeTab) {
-        activeTabURL = activeTab.url;
-    });
+    try {
+        chrome.tabs.getSelected(null, function(activeTab) {
+            activeTabURL = activeTab.url;
+        });
+    } catch (e) {
+        console.log(e)
+    }
 })
 
 
@@ -21,8 +25,12 @@ chrome.tabs.onActivated.addListener(function() {
  * and stores it in the activeTabURL variable.
  */
 chrome.tabs.onUpdated.addListener(function(tab, tabInfo) {
-    if (typeof tabInfo.url !== "undefined" && tabInfo.url.includes("https://ytmp3.cc/")) {
-        activeTabURL = tabInfo.url;
+    try {
+        if (typeof tabInfo.url !== "undefined" && tabInfo.url.includes("https://ytop1.com/")) {
+            activeTabURL = tabInfo.url;
+        }
+    } catch (e) {
+        console.log(e)
     }
 })
 
@@ -32,8 +40,12 @@ chrome.tabs.onUpdated.addListener(function(tab, tabInfo) {
  * This is to prevent the opening of new tabs with spam/ad websites.
  */
 chrome.tabs.onCreated.addListener(function(tab) {
-    if (activeTabURL.includes("https://ytmp3.cc/")) {
-        chrome.tabs.remove(tab.id);
+    try {
+        if (activeTabURL.includes("https://ytop1.com/")) {
+            chrome.tabs.remove(tab.id);
+        }
+    } catch (e) {
+        console.log(e)
     }
 })
 
@@ -59,7 +71,7 @@ chrome.runtime.onMessage.addListener(async function(request) {
         let returnToTab;
         chrome.tabs.query({}, function (tabs) {
             for (var i = 0; i < tabs.length; i++) {
-                if (tabs[i].url.search("https://ytmp3.cc/") > -1) {
+                if (tabs[i].url.search("https://ytop1.com/") > -1) {
                     tabToClose = tabs[i].id;
                 } else if (tabs[i].url === returnTab) {
                     returnToTab = tabs[i].id;
@@ -72,6 +84,7 @@ chrome.runtime.onMessage.addListener(async function(request) {
 })
 
 
+
 /**
  * Creates a new tab and opens the video-converter webpage in it.
  * @returns {Promise<unknown>}
@@ -79,7 +92,7 @@ chrome.runtime.onMessage.addListener(async function(request) {
 function createNewTab() {
     return new Promise(
         function(resolve) {
-            chrome.tabs.create({ url: "https://ytmp3.cc" }, function(tab) {
+            chrome.tabs.create({ url: "https://ytop1.com/en3/download-youtube-to-mp3-music" }, function(tab) {
                 resolve(tab.id);
             });
         }

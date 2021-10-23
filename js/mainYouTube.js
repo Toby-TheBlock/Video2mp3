@@ -43,7 +43,7 @@ function createDownloadBtn() {
     container.appendChild(icon);
     container.appendChild(downloadLink);
 
-    document.getElementsByClassName("top-level-buttons style-scope ytd-menu-renderer")[1].appendChild(container);
+    document.getElementsByClassName("top-level-buttons style-scope ytd-menu-renderer")[0].appendChild(container);
 }
 
 

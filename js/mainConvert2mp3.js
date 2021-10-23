@@ -3,14 +3,69 @@
 /**
  * Ready the DOM and setup intervals/variables on the download-page.
  */
-if (window.location.href.includes("https://ytmp3.cc/")) {
+if (window.location.href.includes("https://ytop1.com/")) {
     setupDownloadPage();
     listenToBackground();
 
-    var interval = setInterval(readyDownload, 1);
-    setInterval(downloadVideo, 1);
-
+    var interval = setInterval(readyDownload, 100);
+    setInterval(downloadVideo, 100);
+    setInterval(removeAds, 10);
     var videoURL;
+}
+
+
+/**
+ * Starts the download of the converted video and sends message to background finish up.
+ */
+function downloadVideo() {
+    let downloadBtn = document.getElementById("btnDown");
+
+    if (typeof downloadBtn !== "undefined" && downloadBtn !== null) {
+        downloadBtn.click();
+        setTimeout(function() {
+            chrome.runtime.sendMessage({closeTab: "."});
+        }, 2000);
+    }
+}
+
+
+/**
+ * Adds message listener which awaits the videoURL who's to be downloaded from the background.
+ */
+function listenToBackground() {
+    chrome.runtime.onMessage.addListener(function(request) {
+        videoURL = request.URLToInsert;
+    });
+}
+
+
+/**
+ * Provides the videoURL to the host website, and initializes the video conversion.
+ */
+function readyDownload() {
+    let input = document.getElementById("txtUrls");
+    let submitBtn = document.getElementById("btnGetUrls");
+
+    if (typeof videoURL !== "undefined" && typeof submitBtn !== "undefined") {
+        input.value = videoURL;
+
+        setTimeout(function() {
+            submitBtn.click();
+        }, 100);
+
+        clearInterval(interval);
+    }
+}
+
+
+/**
+ * Removes all of the injected Ads (iframes) from the page.
+ */
+function removeAds() {
+    let iframes = document.getElementsByTagName("iframe");
+    for (let i = 0; i < iframes.length; i++) {
+        iframes[i].remove();
+    }
 }
 
 
@@ -31,39 +86,9 @@ function setupDownloadPage() {
 }
 
 
-/**
- * Adds message listener which awaits the videoURL who's to be downloaded from the background.
- */
-function listenToBackground() {
-    chrome.runtime.onMessage.addListener(function(request) {
-        videoURL = request.URLToInsert;
-    });
-}
 
 
-/**
- * Provides the videoURL to the host website, and initializes the video conversion.
- */
-function readyDownload() {
-    if (videoURL !== "") {
-        setTimeout(function() {
-            document.getElementById("input").value = videoURL;
-            document.getElementById("submit").click();
-        }, 1000);
-
-        clearInterval(interval);
-    }
-}
 
 
-/**
- * Starts the download of the converted video and sends message to background finish up.
- */
-function downloadVideo() {
-    if (document.getElementById("buttons").hasAttribute("style")) {
-        document.getElementsByTagName("a")[5].click();
-        setTimeout(function() {
-            chrome.runtime.sendMessage({closeTab: "."});
-        }, 2000);
-    }
-}
+
+
