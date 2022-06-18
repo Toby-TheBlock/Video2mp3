@@ -1,6 +1,7 @@
 /* © Copyright 2021, Tobias Günther, All rights reserved. */
 
-
+let downloadPageURL = "onlymp3.to";
+let filename = "";
 var activeTabURL = "";
 var returnTab = "";
 
@@ -10,13 +11,15 @@ var returnTab = "";
  * and stores it in the activeTabURL variable.
  */
 chrome.tabs.onActivated.addListener(function() {
-    try {
-        chrome.tabs.getSelected(null, function(activeTab) {
-            activeTabURL = activeTab.url;
-        });
-    } catch (e) {
-        console.log(e)
-    }
+    setTimeout(function() {
+        try {
+            chrome.tabs.getSelected(null, function(activeTab) {
+                activeTabURL = activeTab.url;
+            });
+        } catch (e) {
+            console.log(e)
+        }
+    }, 100);
 })
 
 
@@ -26,7 +29,7 @@ chrome.tabs.onActivated.addListener(function() {
  */
 chrome.tabs.onUpdated.addListener(function(tab, tabInfo) {
     try {
-        if (typeof tabInfo.url !== "undefined" && tabInfo.url.includes("https://ytop1.com/")) {
+        if (typeof tabInfo.url !== "undefined" && tabInfo.url.includes(downloadPageURL)) {
             activeTabURL = tabInfo.url;
         }
     } catch (e) {
@@ -41,7 +44,7 @@ chrome.tabs.onUpdated.addListener(function(tab, tabInfo) {
  */
 chrome.tabs.onCreated.addListener(function(tab) {
     try {
-        if (activeTabURL.includes("https://ytop1.com/")) {
+        if (activeTabURL.includes(downloadPageURL)) {
             chrome.tabs.remove(tab.id);
         }
     } catch (e) {
@@ -56,6 +59,7 @@ chrome.tabs.onCreated.addListener(function(tab) {
  * and then send the message content to it.
  * If the message is "closeTab" close the current tab (download page),
  * and return to the YouTube video tab.
+ * If the message is "filename" the value of the message is being stored for further use.
  */
 chrome.runtime.onMessage.addListener(async function(request) {
     if (request.videoURL) {
@@ -64,14 +68,14 @@ chrome.runtime.onMessage.addListener(async function(request) {
 
         setTimeout(function() {
             chrome.tabs.sendMessage(tabId, {URLToInsert: "" + returnTab + ""});
-        }, 1000);
+        }, 3000);
 
     } else if (request.closeTab) {
         let tabToClose;
         let returnToTab;
         chrome.tabs.query({}, function (tabs) {
             for (var i = 0; i < tabs.length; i++) {
-                if (tabs[i].url.search("https://ytop1.com/") > -1) {
+                if (tabs[i].url.search(downloadPageURL) > -1) {
                     tabToClose = tabs[i].id;
                 } else if (tabs[i].url === returnTab) {
                     returnToTab = tabs[i].id;
@@ -80,6 +84,8 @@ chrome.runtime.onMessage.addListener(async function(request) {
             chrome.tabs.remove(tabToClose);
             chrome.tabs.update(returnToTab, {selected: true});
         });
+    } else if (request.filename) {
+        filename = request.filename;
     }
 })
 
@@ -92,9 +98,16 @@ chrome.runtime.onMessage.addListener(async function(request) {
 function createNewTab() {
     return new Promise(
         function(resolve) {
-            chrome.tabs.create({ url: "https://ytop1.com/en3/download-youtube-to-mp3-music" }, function(tab) {
+            chrome.tabs.create({ url: "https://" + downloadPageURL }, function(tab) {
                 resolve(tab.id);
             });
         }
     )
 }
+
+
+chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
+    if (downloadItem.url.includes(downloadPageURL)) {
+     suggest({filename: filename + ".mp3", conflictAction: "overwrite" });
+    }
+});

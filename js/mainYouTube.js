@@ -11,6 +11,7 @@ var failedAttempts = 0;
 function setupDownloadBtn() {
     if (window.location.href.includes("https://www.youtube.com/watch") && document.getElementById("downloadBtnContainer") === null) {
         try {
+            removeExistingDownloadBtn();
             createDownloadBtn();
         } catch {
             if (failedAttempts < 100) {
@@ -19,6 +20,10 @@ function setupDownloadBtn() {
             }
         }
     }
+}
+
+function removeExistingDownloadBtn() {
+    document.getElementById("top-level-buttons-computed").childNodes[3].remove();
 }
 
 
@@ -51,5 +56,15 @@ function createDownloadBtn() {
  * Sends a message to the backend to signals the start of downloading the current video.
  */
 function changeTabs() {
+    getFilenameForDownload();
     chrome.runtime.sendMessage({videoURL: "" + window.location.href + ""});
+}
+
+
+/**
+ * Sends message to background with information about the filename who's to be used.
+ */
+function getFilenameForDownload() {
+    let videoTitle = document.getElementsByClassName("title style-scope ytd-video-primary-info-renderer")[0].childNodes[0].innerHTML;
+    chrome.runtime.sendMessage({filename: videoTitle});
 }
