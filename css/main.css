@@ -1,42 +1,42 @@
 .downloadBtnContainer {
-    background-color: transparent;
-    font-weight: bold;
-    font: 14px Roboto, Arial, sans-serif;
-    color: #fff;
-    text-transform: uppercase;
-    padding: 0px 7px 0px 5px;
-    border: none;
-    cursor: pointer;
-    outline: none;
-    max-width: 120px;
+  background-color: transparent;
+  font-weight: bold;
+  font: 14px Roboto, Arial, sans-serif;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 0px 7px 0px 5px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  max-width: 120px;
 }
 
 .downloadBtnContainer p {
-    position: relative;
-    left: 18px;
-    top: -23px;
+  position: relative;
+  left: 18px;
+  top: -23px;
 }
 
 #downloadIcon {
-    position: relative;
-    left: 0px;
-    top: 3px;
-    font: 25px Roboto, Arial, sans-serif;
+  position: relative;
+  left: 0px;
+  top: 3px;
+  font: 25px Roboto, Arial, sans-serif;
 }
 
 div.hideContent {
-    z-index: 100000;
-    width: 100%;
-    height: 100%;
-    background-color: #ffffff;
-    position: fixed;
-    top: 0px; 
-    left: 0px;
+  z-index: 100000;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  position: fixed;
+  top: 0px;
+  left: 0px;
 }
 
 p.hideContent {
-    font-size: 400%;
-    text-align: center;
-    position: relative;
-    top: 40%;
+  font-size: 400%;
+  text-align: center;
+  position: relative;
+  top: 40%;
 }
